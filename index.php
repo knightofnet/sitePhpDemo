@@ -55,7 +55,7 @@ if (isset($_SESSION['isConnected']) && $_SESSION['isConnected'] == true) {
         }
     } else {
     
-        // Si rien de spéciale, l'utilisateur est connecté on le renvoi vers la page
+        // Si rien de spéciale, l'utilisateur est connecté on le renvoie vers la page
         // des utilisateurs connectés.
         header("Location: ".URL_SITE."/pages/mainPage.php");
 
