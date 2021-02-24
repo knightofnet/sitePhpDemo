@@ -57,7 +57,7 @@ if (isset($_SESSION['isConnected']) && $_SESSION['isConnected'] == true) {
     
         // Si rien de spéciale, l'utilisateur est connecté on le renvoi vers la page
         // des utilisateurs connectés.
-        header("Location: ".URL_SITE."/pages/mainPage.php");
+        header("Location: ".URL_SITE."/pages/mainPage.php"    );
 
         // La fonction exit() arrête le traitement de ce fichier à ce niveau.
         // Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
