@@ -3,6 +3,7 @@
 Site web à usage pédagogique, à l'intention d'étudiants de 1er cycle débutant dans la programmation web. En utilisant PHP comme langage serveur, ce site illustre un ensemble de concepts tels que la segmentation des fichiers PHP/HTML, l’inclusion d’autres fichiers, les sessions, etc.
 
 Vous êtes ici sur le dépôt du site Démo : c'est dans cet espace que sont stockés et centralisés les fichiers de code du site Démo.
+
  
 ## Installation
 
