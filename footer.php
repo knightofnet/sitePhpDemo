@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="col">
-                    Par Aryx (Arnaud Leblanc) - <a href="https://code.dacendi.net/Aryx/SitePhpDemo" target="_blank">https://code.dacendi.net/Aryx/SitePhpDemo</a>
+                    Par Aryx - <a href="https://github.com/knightofnet/sitePhpDemo" target="_blank">https://github.com/knightofnet/sitePhpDemo</a>
                 </div>
 
             </div>

@@ -17,7 +17,7 @@
  */ 
 
 // Cette instruction se retrouve dans toutes les pages :
-// Elle permets d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
+// Elle permet d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
 // les éléments en commun pour que le site fonctionne.
 //
 // Le fichier initCore.php est chargé : c'est comme si son code était écris ici.
@@ -67,7 +67,7 @@ if (isset($_GET) && isset($_GET['error'])) {
     $messagePourHtml = $_GET['error'];
 }
 
-// La fonction connectBDD de la classe/fichier BddUtils permets de se connecter à la base de données.
+// La fonction connectBDD de la classe/fichier BddUtils permet de se connecter à la base de données.
 // La connexion (si ok) est sauvegardée dans la variable $bdd.
 $dbb = BddUtils::connectBDD();
 

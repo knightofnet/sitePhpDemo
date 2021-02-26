@@ -17,7 +17,7 @@
 
 /* 
  * Cette instruction se retrouve dans toutes les pages :
- * Elle permets d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
+ * Elle permet d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
  * les éléments en commun pour que le site fonctionne (comme l'inclusion des fichiers PHP nécessaires ainsi que la gestion de la navbar).
  * Le fichier initCore.php est chargé : c'est comme si son code était écrit ici.
  */ 
@@ -25,7 +25,7 @@ require_once("initCore.php");
 
 // Ici la variable $messagePourHtml est initialisée. Cette variable - si son contenu est différent de vide - permettra de faire passer un message à l'utilisateur.
 $messagePourHtml = "";
-// La fonction connectBDD de la classe/fichier BddUtils permets de se connecter à la base de données.
+// La fonction connectBDD de la classe/fichier BddUtils permet de se connecter à la base de données.
 // La connexion (si ok) est sauvegardée dans la variable $bdd.
 $dbb = BddUtils::connectBDD();
 
@@ -293,7 +293,18 @@ include("header.php");
     <div class="col-sm-4"> 
         <form class="form-signin col-sm-12" method="post" id="formConnect">
 
-            <h1 class="h3 mb-3 font-weight-normal">Merci de vous connecter</h1>
+            <h1 class="h3 mb-3 font-weight-normal">
+                Merci de vous <?=empty($checkedInitStateHtml) ? "connecter" : "enregistrer"?>
+                <?php
+                // Ce code : empty($checkedInitStateHtml) ? "connecter" : "enregistrer"
+                // est une forme raccourcie, dédiée à de l'affichage, à celui ci :
+                // if (empty($checkedInitStateHtml) {
+                //    echo "connecter";                    
+                // } else {
+                //    echo "enregistrer";
+                // }
+                ?>
+            </h1>
 
             <div class="form-group">
                 <label for="inputEmail" class="sr-only">Adresse email</label>
@@ -335,7 +346,7 @@ include("header.php");
                 <div class="modal-body">
                     <p>Vous avez cliquez pour envoyer le formulaire. Voici ce qu'il va se passer une fois que vous aurez cliqué sur continuer :</p>
                     <ul>
-                        <li>Les données vont être vérifiés avant envoie. Puis, si OK, le formulaire les enverra (<code>method="post"</code>) sur cette même page.</li>
+                        <li>Les données vont être vérifiées avant envoie. Puis, si OK, le formulaire les enverra (<code>method="post"</code>) sur cette même page.</li>
                         <li>Les données postées sont les suivantes :
                             <div class="row grey">
                                 <div class="col-4">Contenu de la variable PHP $_POST après transmission du formulaire :</div>

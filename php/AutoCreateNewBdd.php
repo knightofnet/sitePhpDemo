@@ -18,7 +18,7 @@ class AutoCreateNewBdd
         // Hors-programme (mais bien utile) :
         // Ici il s'agit d'une structure de programme appellé Try-catch.
         // Le principe est de mettre des instructions dans le corps du try. Si l'une d'elles échoue,
-        // alors une exception sera lancée. Cette dernière peut-être recupéré par un catch. Un traitement
+        // alors une exception sera lancée. Cette dernière peut-être recupérée par un catch. Un traitement
         // de l'exception peut alors être réalisé.
         // C'est le même principe que le Try-except vu en python au S1.
         try {

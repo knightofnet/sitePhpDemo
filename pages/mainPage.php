@@ -12,7 +12,7 @@
  */ 
 
 // Cette instruction se retrouve dans toutes les pages :
-// Elle permets d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
+// Elle permet d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
 // les éléments en commun pour que le site fonctionne.
 //
 // Le fichier initCore.php est chargé : c'est comme si son code était écris ici.
