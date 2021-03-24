@@ -7,7 +7,7 @@ Vous êtes ici sur le dépôt du site Démo : c'est dans cet espace que sont sto
  
 ## Installation
 
-- Télécharger les fichiers [en cliquant ici](https://code.dacendi.net/Aryx/SitePhpDemo/archive/master.zip).
+- Télécharger les fichiers [en cliquant ici](https://github.com/knightofnet/sitePhpDemo/archive/refs/heads/master.zip).
 - Créer un nouveau dossier la racine du serveur web. Exemple : sitePhpDemo.
 - Placez les fichiers du site dans ce dossier.
 - Configurez l'accès à la BDD, en modifiant le fichier ./php/BddUtils.
