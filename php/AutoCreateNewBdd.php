@@ -22,9 +22,23 @@ class AutoCreateNewBdd
         // de l'exception peut alors être réalisé.
         // C'est le même principe que le Try-except vu en python au S1.
         try {
-            // On essaie dans un premier temps de se connecter à la BDD 'bddExemple'.
+            // On essaie dans un premier temps de se connecter à la BDD 'BddUtils::$nomBdd'.
             // Si la bdd n'existe pas, alors on va la créer.
             $dbb = BddUtils::connectBDD();
+            $requeteSql = "SELECT count(*) as C FROM information_schema.tables WHERE table_schema = '".BddUtils::$nomBdd."' AND table_name = 'personne'";
+        
+            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+            $res = $dbb->query($requeteSql);
+
+            $needCreate = false;
+            while ( ($l=$res->fetch_assoc()) != null) {
+                
+                $needCreate = $l['C'] != 1;
+              
+            }
+
+
+
         } catch (Exception $ex) {
          
             // Si on arrive ici, c'est qu'il n'a pas été possible de se connecter à la BDD.
@@ -39,40 +53,50 @@ class AutoCreateNewBdd
                 ));
             }
 
-            $dbb = new mysqli($srv,$usr,$pwd);
-            
-            $requeteSql = "CREATE DATABASE IF NOT EXISTS `bddexemple` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
-            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
-            $dbb->query($requeteSql);
-            $dbb->close();
+            $needCreate = true;
 
-            $dbb = BddUtils::connectBDD();
+           
+        }
 
-            $requeteSql = "DROP TABLE IF EXISTS `personne`";
-            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
-            $dbb->query($requeteSql);          
-            
-            $requeteSql = "CREATE TABLE IF NOT EXISTS `personne` (  `idpersonne` int(11) NOT NULL AUTO_INCREMENT,   `nompersonne` varchar(50) NOT NULL,   passwd varchar(255) NOT NULL,   PRIMARY KEY (`idpersonne`) )  ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
-            $dbb->query($requeteSql);    
-
-            $requeteSql = "DROP TABLE IF EXISTS `image`";
-            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
-            $dbb->query($requeteSql);  
-
-            $requeteSql = "CREATE TABLE `image` ( `idimage` INT NOT NULL AUTO_INCREMENT , `nomImage` VARCHAR(100) NOT NULL ,  `path` TEXT NOT NULL, `idpersonne` int(11) NOT NULL, PRIMARY KEY (`idimage`))  ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
-            $dbb->query($requeteSql);  
-
-            $requeteSql = "ALTER TABLE `image` ADD FOREIGN KEY (`idpersonne`) REFERENCES `personne` (`idpersonne`)";
-            $_SESSION['requeteSqlMemoire'][] = $requeteSql;
-            $dbb->query($requeteSql);
-                        
-            $dbb->close();
+        if ($needCreate) {
+            self::createDbbAndTables($srv, $usr, $pwd);
         }
         
         
 
+    }
+
+    private static function createDbbAndTables($srv,$usr,$pwd) {
+        $dbb = new mysqli($srv,$usr,$pwd);
+            
+        $requeteSql = "CREATE DATABASE IF NOT EXISTS `".BddUtils::$nomBdd."` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+        $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+        $dbb->query($requeteSql);
+        $dbb->close();
+
+        $dbb = BddUtils::connectBDD();
+
+        $requeteSql = "DROP TABLE IF EXISTS `personne`";
+        $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+        $dbb->query($requeteSql);          
+        
+        $requeteSql = "CREATE TABLE IF NOT EXISTS `personne` (  `idpersonne` int(11) NOT NULL AUTO_INCREMENT,   `nompersonne` varchar(50) NOT NULL,   passwd varchar(255) NOT NULL,   PRIMARY KEY (`idpersonne`) )  ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+        $dbb->query($requeteSql);    
+
+        $requeteSql = "DROP TABLE IF EXISTS `image`";
+        $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+        $dbb->query($requeteSql);  
+
+        $requeteSql = "CREATE TABLE `image` ( `idimage` INT NOT NULL AUTO_INCREMENT , `nomImage` VARCHAR(100) NOT NULL ,  `path` TEXT NOT NULL, `idpersonne` int(11) NOT NULL, PRIMARY KEY (`idimage`))  ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+        $dbb->query($requeteSql);  
+
+        $requeteSql = "ALTER TABLE `image` ADD FOREIGN KEY (`idpersonne`) REFERENCES `personne` (`idpersonne`)";
+        $_SESSION['requeteSqlMemoire'][] = $requeteSql;
+        $dbb->query($requeteSql);
+                    
+        $dbb->close();   
     }
 
     public static function razSite() {
@@ -83,7 +107,7 @@ class AutoCreateNewBdd
 
         $dbb = new mysqli($srv,$usr,$pwd);
             
-        $dbb->query("DROP DATABASE `bddexemple`");
+        $dbb->query("DROP DATABASE `".BddUtils::$nomBdd."`");
         $dbb->close();
     }
     

@@ -373,8 +373,8 @@ include("header.php");
 <script>
     function submitForm() {
         $('#modalSubmit').modal('hide');
-        var eltForm = document.getElementById('form-submit');
-        eltForm.click();
+        var eltForm = document.getElementById('formConnect');
+        eltForm.submit();
 
     }
 
