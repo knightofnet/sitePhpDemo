@@ -45,6 +45,7 @@ if (isset($_SESSION['isConnected']) && $_SESSION['isConnected'] == true) {
         $action = VerifierUtils::verifierGetAction($_GET['action']);
         if ($action == "logout") {
             // si l'utilisateur a demander à se deconnecter, on détruit la session. 
+            $_SESSION = [];
             session_destroy();
 
             // Et on en reinitialise une.

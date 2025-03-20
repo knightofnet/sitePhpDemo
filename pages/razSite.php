@@ -12,7 +12,7 @@
  *      - $_GET : avec le paramètre 'action' dans l'URL associé à la valeur 'raz' / 'delImages', va effectuer
  * 			les actions demandées.
  * 
- */ 
+ */
 
 // Cette instruction se retrouve dans toutes les pages :
 // Elle permet d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
@@ -28,18 +28,18 @@ $dbb = BddUtils::connectBDD();
 /*
  * Traitement de la variable $_GET.
  * 
- */ 
+ */
 // Test si dans le tableau de la variable $_GET, il y a une clef se nommant action. Si oui, est-ce que sa valeur
 // est 'raz' ou 'delImages'. Si oui, on continue le traitement.
 if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "delImages")) {
 
 	// On récupère toutes les images à partir de la BDD.
 	$images = ImageServices::getAllImages($dbb);
-	foreach($images as $image) {
-		
+	foreach ($images as $image) {
+
 		// Pour chaque image, on va supprimer le fichier avec la fonction php unlink().
-		if($image['path']) {
-			unlink( DIR_SRV . $image['path']);
+		if ($image['path']) {
+			unlink(DIR_SRV . $image['path']);
 		}
 
 		// Après avoir effacé le fichier de l'image, on va l'effacer de la BDD.
@@ -52,17 +52,16 @@ if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "d
 		AutoCreateNewBdd::razSite($dbb);
 
 		// On détruit aussi la session.
+		$_SESSION = [];
 		session_destroy();
-
-	
 	}
 	// On redirige l'utilisateur vers la page index.php.
-	header("Location: ".URL_SITE."/index.php");
+	header("Location: " . URL_SITE . "/index.php");
 
 	// La fonction exit() arrête le traitement de ce fichier à ce niveau.
 	// Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
 	exit();
-} 
+}
 
 
 
@@ -77,11 +76,11 @@ include("../header.php");
 		<h1>Remettre à zéro le site</h1>
 
 		<p>Si pour une raison ou une autre, vous désirez remettre à zéro le site, cliquez sur l'un des boutons suivant :</p>
-		
+
 		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalAvertissement">R-à-Z</button>
-		
+
 		<a href="?action=deleteImages" class="btn btn-warning">Supprimer les images</a>
-		<a href="<?=URL_SITE."/index.php"?>" class="btn btn-success">Revenir à l'accueil</a>
+		<a href="<?= URL_SITE . "/index.php" ?>" class="btn btn-success">Revenir à l'accueil</a>
 
 	</div>
 </div>
@@ -97,7 +96,7 @@ include("../header.php");
 			</div>
 			<div class="modal-body">
 				<p>Vous avez cliquez pour remettre le site à zéro. Toutes les images envoyées vont être supprimées et la base de données va être effacée.</p>
-				<p>Validez en cliquant sur le bouton Continuer.</p>				
+				<p>Validez en cliquant sur le bouton Continuer.</p>
 			</div>
 			<div class="modal-footer">
 				<a href="?action=raz">
