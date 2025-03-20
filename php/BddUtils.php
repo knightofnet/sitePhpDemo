@@ -16,12 +16,14 @@ class BddUtils
     public static $nomBdd = "bddexemple";
 
 
-    public static function connectBDD() {
+    public static function connectBDD() : \PDO {
         
-        $db = new mysqli(self::$adresseServeurMysql, 
+        $dsn = "mysql:host=" . self::$adresseServeurMysql . ";dbname=" . self::$nomBdd.";charset=utf8";
+
+        $db = new PDO($dsn, 
                          self::$utilisateurMysql,
-                         self::$mdpMySql,
-                         self::$nomBdd);
+                         self::$mdpMySql
+                         );
         
         //echo 'Succés... ' . $db->host_info . "\n";
         

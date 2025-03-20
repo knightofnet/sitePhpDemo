@@ -31,7 +31,7 @@ class AutoCreateNewBdd
             $res = $dbb->query($requeteSql);
 
             $needCreate = false;
-            while ( ($l=$res->fetch_assoc()) != null) {
+            while ( ($l=$res->fetch(PDO::FETCH_ASSOC)) != null) {
                 
                 $needCreate = $l['C'] != 1;
               
