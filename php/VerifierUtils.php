@@ -16,7 +16,7 @@ class VerifierUtils
      */
     public static function verifierEstEntier($entierAtester) {
         if( preg_match("#^\d+$#", $entierAtester)) {
-            return $entierAtester;
+            return intval($entierAtester);
         }
         return -1;
     }
@@ -41,15 +41,7 @@ class VerifierUtils
     }
     
     public static function verifierEmail($valeurAverifier) {
-        if (empty($valeurAverifier)) {
-            return null;
-        }
-
-        if (preg_match("/^.+?@.+?\..+$/m", $valeurAverifier)) {
-            return htmlspecialchars($valeurAverifier);
-        }      
-
-        return null;
+        return filter_var($valeurAverifier, FILTER_VALIDATE_EMAIL) ? $valeurAverifier : null;
     }
 
     public static function verifierMotDePasse($valeurAverifier) {
@@ -57,6 +49,8 @@ class VerifierUtils
             return null;
         }
 
+        // On vérifie que la chaine contient entre 5 et 15 caractères
+        // alphanumériques, ou des caractères spéciaux _ - .        
         if (preg_match("/^[a-zA-Z0-9_\-\.]{5,15}$/m", $valeurAverifier)) {
             return $valeurAverifier;
         }      

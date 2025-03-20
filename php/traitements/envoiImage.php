@@ -9,7 +9,7 @@ require_once("../../initCore.php");
 
 // Si aucune donnée soumise par un formulaire, ou utilisateur non connecté, ou session inexistante
 //  on renvoie une erreur 404 et on arrête le chargement de la page
-if (!isset($_POST) || !isset($_SESSION['isConnected']) || $_SESSION['isConnected'] == false) {
+if (empty($_POST) || !isset($_SESSION['isConnected']) || $_SESSION['isConnected'] == false) {
     header("HTTP/1.0 404 Not Found");
     echo "Page inexistante";
     die();
