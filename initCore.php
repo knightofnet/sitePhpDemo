@@ -5,9 +5,9 @@ ini_set("display_errors", 1);
 /*
 * Définition des constantes pour la connexion à la BDD.
 * 
-* A MODIFIER SELON VOTRE CONFIGURATION.
-* A MODIFIER SELON VOTRE CONFIGURATION.
-* A MODIFIER SELON VOTRE CONFIGURATION.
+* À MODIFIER SELON VOTRE CONFIGURATION.
+* À MODIFIER SELON VOTRE CONFIGURATION.
+* À MODIFIER SELON VOTRE CONFIGURATION.
 */
 // L'adresse du serveur de base de données.
 define("BDD_ADRESSE_SERVEUR", "127.0.0.1");
@@ -21,10 +21,10 @@ define("BDD_MDP", "");
 // ===============================================
 
 /* On définit 2 constantes :
-     * - DIR_SRV : chemin du projet coté serveur  (exemple : c:\wamp\www\phpExempleUtilisationSession)
-     * - URL_SITE : l'url du site (exemple : http:\\localhost\phpExempleUtilisationSession)
+     * - DIR_SRV : chemin du projet côté serveur  (exemple : c:\wamp\www\phpExempleUtilisationSession)
+     * - URL_SITE : l'URL du site (exemple : http:\\localhost\phpExempleUtilisationSession)
      * 
-     * Ici, la valeur de ces constantes sont définit de façon dynamique.
+     * Ici, la valeur de ces constantes est définie de façon dynamique.
      */
 define("DIR_SRV", str_replace('\\', '/', __DIR__) . "/");
 $s = explode("/", $_SERVER['SCRIPT_NAME']);
@@ -33,7 +33,7 @@ define("URL_SITE", "http://" . $_SERVER['HTTP_HOST'] . '/' . $s[1]);
 
 define("BDD_NOM_BASE_DE_DONNEES", "bddexemple");
 
-// On charge les fichier nécessaires pour le site.
+// On charge les fichiers nécessaires pour le site.
 // - Ils sont chargés une seule fois ("require_once").
 require_once(DIR_SRV . 'php/AutoCreateNewBdd.php');
 require_once(DIR_SRV . 'php/BddUtils.php');
@@ -42,7 +42,7 @@ require_once(DIR_SRV . 'php/VerifierUtils.php');
 require_once(DIR_SRV . 'php/services/PersonneServices.php');
 require_once(DIR_SRV . 'php/services/ImageServices.php');
 
-// on démarre la session avec session_start() :
+// On démarre la session avec session_start() :
 session_start();
 
 // Crée la BDD si elle n'existe pas. Uniquement pour la démo (à ne pas reproduire).
@@ -88,7 +88,7 @@ $navbarHtml = [
 /**
  * Redirige l'utilisateur vers la page listImages.php avec un message d'erreur.
  * 
- * @param string $error le message d'erreur à afficher.
+ * @param string $error Le message d'erreur à afficher.
  */
 function redirectWithError($error)
 {
@@ -118,10 +118,10 @@ function var_dump_ret($mixed = null)
 }
 
 /**
- * Convertie des octets en taille de fichier humainement compréhensible .
+ * Convertit des octets en taille de fichier humainement compréhensible.
  *
- * @param string $bytes taille en octets
- * @return string human readable file size
+ * @param string $bytes Taille en octets.
+ * @return string Taille de fichier lisible par un humain.
  * 
  * @author Mogilev Arseny
  */
