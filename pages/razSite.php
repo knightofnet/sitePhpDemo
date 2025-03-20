@@ -5,10 +5,10 @@
  * Nom de la page :
  *      Page permettant de remettre le site à zéro.
  * Description :
- * 		Avec cette page l'utilisateur - qu'il soit connecté ou non - va pouvoir remettre le site à 0. Soit
+ * 		Avec cette page, l'utilisateur - qu'il soit connecté ou non - va pouvoir remettre le site à zéro. Soit
  * 		juste pour supprimer les images enregistrées, soit pour tout effacer (sauf les fichiers php/js/css).
  * Traitements possibles :
- *      - Normal : affiche la page (si aucun $_GET )
+ *      - Normal : affiche la page (si aucun $_GET)
  *      - $_GET : avec le paramètre 'action' dans l'URL associé à la valeur 'raz' / 'delImages', va effectuer
  * 			les actions demandées.
  * 
@@ -29,7 +29,7 @@ $dbb = BddUtils::connectBDD();
  * Traitement de la variable $_GET.
  * 
  */
-// Test si dans le tableau de la variable $_GET, il y a une clef se nommant action. Si oui, est-ce que sa valeur
+// Test si dans le tableau de la variable $_GET, il y a une clé se nommant action. Si oui, est-ce que sa valeur
 // est 'raz' ou 'delImages'. Si oui, on continue le traitement.
 if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "delImages")) {
 
@@ -37,7 +37,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "d
 	$images = ImageServices::getAllImages($dbb);
 	foreach ($images as $image) {
 
-		// Pour chaque image, on va supprimer le fichier avec la fonction php unlink().
+		// Pour chaque image, on va supprimer le fichier avec la fonction PHP unlink().
 		if ($image['path']) {
 			unlink(DIR_SRV . $image['path']);
 		}
@@ -46,7 +46,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "d
 		ImageServices::deleteImageAvecId($dbb, $image['idimage']);
 	}
 
-	// On regarde si la remise à zéro de la base de donnnées à aussi été demandée.
+	// On regarde si la remise à zéro de la base de données a aussi été demandée.
 	if ($_GET['action'] == "raz") {
 		// Si oui, on efface la BDD.
 		AutoCreateNewBdd::razSite($dbb);
@@ -59,7 +59,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "d
 	header("Location: " . URL_SITE . "/index.php");
 
 	// La fonction exit() arrête le traitement de ce fichier à ce niveau.
-	// Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
+	// Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
 	exit();
 }
 
@@ -75,7 +75,7 @@ include("../header.php");
 	<div class="col">
 		<h1>Remettre à zéro le site</h1>
 
-		<p>Si pour une raison ou une autre, vous désirez remettre à zéro le site, cliquez sur l'un des boutons suivant :</p>
+		<p>Si, pour une raison ou une autre, vous désirez remettre à zéro le site, cliquez sur l'un des boutons suivants :</p>
 
 		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalAvertissement">R-à-Z</button>
 
@@ -90,12 +90,12 @@ include("../header.php");
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Remise à zéro du site</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<p>Vous avez cliquez pour remettre le site à zéro. Toutes les images envoyées vont être supprimées et la base de données va être effacée.</p>
+				<p>Vous avez cliqué pour remettre le site à zéro. Toutes les images envoyées vont être supprimées et la base de données va être effacée.</p>
 				<p>Validez en cliquant sur le bouton Continuer.</p>
 			</div>
 			<div class="modal-footer">
@@ -110,3 +110,4 @@ include("../header.php");
 
 <?php
 include("../footer.php");
+?>
