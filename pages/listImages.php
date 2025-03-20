@@ -88,8 +88,7 @@ $navbarHtml['lstImage']['active'] = true;
 include("../header.php");
 ?>
 
-<div class="row">
-	
+<div class="row">	
 	
 	<div class="<?=$classTableauImages?>">
 		<?php 
