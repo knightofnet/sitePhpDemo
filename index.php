@@ -195,7 +195,7 @@ include("header.php");
 
 <?php
 if ($messagePourHtml != "") {
-    echo "<div class=\"alert alert-warning\" >$messagePourHtml</div>";
+    echo "<div class=\"alert alert-warning\" >".htmlspecialchars($messagePourHtml)."</div>";
 }
 ?>
 
