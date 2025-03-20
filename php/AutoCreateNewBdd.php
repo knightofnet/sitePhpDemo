@@ -8,7 +8,7 @@ class AutoCreateNewBdd
 {
 
     /**
-     * Fonction qui crée la BDD, et les tables.     * 
+     * Fonction qui crée la BDD et les tables.
      */
     public static function create()
     {
@@ -21,14 +21,14 @@ class AutoCreateNewBdd
         $db  = BddUtils::$nomBdd;
 
         // Hors-programme (mais bien utile) :
-        // Ici il s'agit d'une structure de programme appellé Try-catch.
+        // Ici, il s'agit d'une structure de programme appelée Try-catch.
         // Le principe est de mettre des instructions dans le corps du try. Si l'une d'elles échoue,
-        // alors une exception sera lancée. Cette dernière peut-être recupérée par un catch. Un traitement
+        // alors une exception sera lancée. Cette dernière peut être récupérée par un catch. Un traitement
         // de l'exception peut alors être réalisé.
-        // C'est le même principe que le Try-except vu en python au S1.
+        // C'est le même principe que le Try-except vu en Python.
         try {
             // On essaie dans un premier temps de se connecter à la BDD 'BddUtils::$nomBdd'.
-            // Si la bdd n'existe pas, alors on va la créer.
+            // Si la BDD n'existe pas, alors on va la créer.
             $dbb = BddUtils::connectBDD();
             $requeteSql = "SELECT count(*) as C FROM information_schema.tables WHERE table_schema = '" . BddUtils::$nomBdd . "' AND table_name = 'personne'";
 
@@ -40,7 +40,6 @@ class AutoCreateNewBdd
 
                 $needCreate = $l['C'] != 1;
             }
-            
         } catch (Exception $ex) {
 
             // Si on arrive ici, c'est qu'il n'a pas été possible de se connecter à la BDD.
