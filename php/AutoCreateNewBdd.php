@@ -13,12 +13,7 @@ class AutoCreateNewBdd
     public static function create()
     {
 
-        mysqli_report(MYSQLI_REPORT_STRICT);
-
-        $srv = BddUtils::$adresseServeurMysql;
-        $usr = BddUtils::$utilisateurMysql;
-        $pwd = BddUtils::$mdpMySql;
-        $db  = BddUtils::$nomBdd;
+        $db  = BDD_NOM_BASE_DE_DONNEES;
 
         // Hors-programme (mais bien utile) :
         // Ici, il s'agit d'une structure de programme appelée Try-catch.
@@ -27,10 +22,10 @@ class AutoCreateNewBdd
         // de l'exception peut alors être réalisé.
         // C'est le même principe que le Try-except vu en Python.
         try {
-            // On essaie dans un premier temps de se connecter à la BDD 'BddUtils::$nomBdd'.
+            // On essaie dans un premier temps de se connecter à la BDD définie dans la constante 'BDD_NOM_BASE_DE_DONNEES'.
             // Si la BDD n'existe pas, alors on va la créer.
             $dbb = BddUtils::connectBDD();
-            $requeteSql = "SELECT count(*) as C FROM information_schema.tables WHERE table_schema = '" . BddUtils::$nomBdd . "' AND table_name = 'personne'";
+            $requeteSql = "SELECT count(*) as C FROM information_schema.tables WHERE table_schema = '" . BDD_NOM_BASE_DE_DONNEES . "' AND table_name = 'personne'";
 
             $_SESSION['requeteSqlMemoire'][] = $requeteSql;
             $res = $dbb->query($requeteSql);
@@ -58,15 +53,15 @@ class AutoCreateNewBdd
         }
 
         if ($needCreate) {
-            self::createDbbAndTables($srv, $usr, $pwd);
+            self::createDbbAndTables();
         }
     }
 
-    private static function createDbbAndTables($srv, $usr, $pwd)
+    private static function createDbbAndTables()
     {
         $dbb = BddUtils::connectSgbdNoBdd();
 
-        $requeteSql = "CREATE DATABASE IF NOT EXISTS `" . BddUtils::$nomBdd . "` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+        $requeteSql = "CREATE DATABASE IF NOT EXISTS `" . BDD_NOM_BASE_DE_DONNEES . "` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
         $_SESSION['requeteSqlMemoire'][] = $requeteSql;
         $dbb->exec($requeteSql);
 
@@ -97,7 +92,7 @@ class AutoCreateNewBdd
     {
         $dbb = BddUtils::connectBDD();
 
-        $requeteSql = "DROP DATABASE `" . BddUtils::$nomBdd . "`";
+        $requeteSql = "DROP DATABASE `" . BDD_NOM_BASE_DE_DONNEES . "`";
         $_SESSION['requeteSqlMemoire'][] = $requeteSql;
         $dbb->exec($requeteSql);
     }

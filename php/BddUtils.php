@@ -2,29 +2,17 @@
 
 class BddUtils
 {
-    /** @var string L'adresse du serveur. */
-    public static $adresseServeurMysql = "127.0.0.1";
-
-    /** @var string Le nom d'utilisateur pour se connecter à la BDD. */
-    public static $utilisateurMysql = "root";
-
-    /** @var string Le mot de passe de l'utilisateur pour se connecter à la BDD. */
-    public static $mdpMySql = "";
-
-
-    /** @var string le nom de la BDD. A NE PAS MODIFIER. */
-    public static $nomBdd = "bddexemple";
 
 
     public static function connectBDD(): \PDO
     {
 
-        $dsn = "mysql:host=" . self::$adresseServeurMysql . ";dbname=" . self::$nomBdd . ";charset=utf8";
+        $dsn = "mysql:host=" . BDD_ADRESSE_SERVEUR . ";port=" . BDD_PORT . ";dbname=" . BDD_NOM_BASE_DE_DONNEES . ";charset=utf8";
 
         $db = new PDO(
             $dsn,
-            self::$utilisateurMysql,
-            self::$mdpMySql
+            BDD_UTILISATEUR,
+            BDD_MDP
         );
 
         //echo 'Succés... ' . $db->host_info . "\n";
@@ -34,17 +22,21 @@ class BddUtils
 
     public static function connectSgbdNoBdd(): \PDO
     {
+        try {
+            $dsn = "mysql:host=" . BDD_ADRESSE_SERVEUR . ";port=" . BDD_PORT . ";charset=utf8";
 
-        $dsn = "mysql:host=" . self::$adresseServeurMysql . ";charset=utf8";
+            $db = new PDO(
+                $dsn,
+                BDD_UTILISATEUR,
+                BDD_MDP
+            );
 
-        $db = new PDO(
-            $dsn,
-            self::$utilisateurMysql,
-            self::$mdpMySql
-        );
+            //echo 'Succés... ' . $db->host_info . "\n";
 
-        //echo 'Succés... ' . $db->host_info . "\n";
-
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            include_once("pages/connectionBddErreur.php");
+            die();
+        }
     }
 }
