@@ -6,21 +6,21 @@
  *      Page de connexion et d'enregistrement.
  * Description :
  *      Cette page va vous permettre de lire des renseignements sur le site. Avec, vous pourrez également
- *      vous enregistez / vous connectez à la partie réservée aux utilisateurs connectés
+ *      vous enregistrer / vous connecter à la partie réservée aux utilisateurs connectés
  * Traitements possibles :
  *      - Normal : affiche la page (si aucun $_GET et $_POST)
  *      - $_GET : avec le paramètre 'action' dans l'URL associé à la valeur 'logout', permettra à l'utilisateur
  *          connecté de se déconnecter.
  *      - $_POST : permet de traiter le formulaire de connexion/d'enregistrement.
  * 
- */ 
+ */
 
 /* 
  * Cette instruction se retrouve dans toutes les pages :
  * Elle permet d'inclure les fichiers PHP nécessaires au fonctionnement du site, ainsi que
  * les éléments en commun pour que le site fonctionne (comme l'inclusion des fichiers PHP nécessaires ainsi que la gestion de la navbar).
  * Le fichier initCore.php est chargé : c'est comme si son code était écrit ici.
- */ 
+ */
 require_once("initCore.php");
 
 // Ici la variable $messagePourHtml est initialisée. Cette variable - si son contenu est différent de vide - permettra de faire passer un message à l'utilisateur.
@@ -33,18 +33,18 @@ $dbb = BddUtils::connectBDD();
 /*
  * Traitement de la variable $_GET si utilisateur connecté.
  * 
- */ 
+ */
 // Si l'utilisateur est connecté actuellement...
 if (isset($_SESSION['isConnected']) && $_SESSION['isConnected'] == true) {
-    
+
     // ... Et si 'il existe un paramètre nommé 'action' dans l'URL...
-    if (isset($_GET) && isset($_GET['action']) ) {
+    if (isset($_GET) && isset($_GET['action'])) {
 
         // On vérifie que ce paramètres est valide avec la fonction verifierGetAction(). 
         // Voir le détail dans le fichier ./php/VerifierUtils.
         $action = VerifierUtils::verifierGetAction($_GET['action']);
         if ($action == "logout") {
-            // si l'utilisateur a demander à se deconnecter, on détruit la session. 
+            // si l'utilisateur a demandé à se déconnecter, on détruit la session. 
             $_SESSION = [];
             session_destroy();
 
@@ -52,58 +52,59 @@ if (isset($_SESSION['isConnected']) && $_SESSION['isConnected'] == true) {
             session_start();
 
             // On passe un message à l'utilisateur.
-            $messagePourHtml = "L'utilisateur a été déconnecté : La session a été détruite. Idéalement, on aurait du rédiriger l'utilisateur vers une URL sans paramètres : <a href=\"".URL_SITE."\">comme ici</a>";
+            $messagePourHtml = "L'utilisateur a été déconnecté : La session a été détruite. Idéalement, on aurait dû rediriger l'utilisateur vers une URL sans paramètres : <a href=\"" . URL_SITE . "\">comme ici</a>";
         }
     } else {
-    
-        // Si rien de spéciale, l'utilisateur est connecté on le renvoie vers la page
+
+        // Si rien de spécial, l'utilisateur est connecté on le renvoie vers la page
         // des utilisateurs connectés.
-        header("Location: ".URL_SITE."/pages/mainPage.php"    );
+        header("Location: " . URL_SITE . "/pages/mainPage.php");
 
         // La fonction exit() arrête le traitement de ce fichier à ce niveau.
-        // Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
+        // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
         exit();
     }
-    
-} 
-else // Sinon (= l'utilisateur n'est pas connecté)
+} else // Sinon (= l'utilisateur n'est pas connecté)
 {
     // ... et il y a un paramètre nommé 'action' dans l'URL...
-    if (isset($_GET) && isset($_GET['action']) ) {
+    if (isset($_GET) && isset($_GET['action'])) {
         // ... Alors on va rediriger l'utilisateur vers une URL sans paramètres (juste pour que ça soit propre).
-        header("Location: ".URL_SITE);
+        header("Location: " . URL_SITE);
 
         // La fonction exit() arrête le traitement de ce fichier à ce niveau.
-        // Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
+        // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
         exit();
     }
 }
 
 
 /*
- * Traitement de la variable $_POST (= des données d'un formulaire ont été postée).
+ * Traitement de la variable $_POST (= des données d'un formulaire ont été postées).
  * 
- */ 
-// Si la variable $_POST existe (isset($_POST)) et que le nombre d'éléments dans cette variable (rappel : $_POST et $_GET sont
+ */
+// Si la variable $_POST n'est pas vide (!empty($_POST)) et que le nombre d'éléments dans cette variable (rappel : $_POST et $_GET sont
 // des tableaux) est au moins de 2 (on attend le mail et le mot de passe), alors on va traiter tout ça.
-if (isset($_POST) && count($_POST) >= 2 ) {
+if (!empty($_POST) && count($_POST) >= 2) {
 
     // Le formulaire nous a transmis 3 informations normalement : l'email, le mot de passe et s'il le fallait, un booléen indiquant
-    // qu'il faut enregister l'utilisateur. On va récupèrer ces variables en les vérifiants.
+    // qu'il faut enregistrer l'utilisateur. On va récupérer ces variables en les vérifiants.
 
     // On initialise le booléen suivant à 'true'. 
     // Il nous servira à savoir s'il y a eu une erreur. Si c'est le cas, on le placera à false,
     // ce qui aura pour effet plus bas [if ($isOkToContinue) ...] de ne pas rentrer dans le if, et donc
-    // de ne faire aucun traitement.
+    // de ne faire aucun traitement supplémentaire.
     $isOkToContinue = true;
 
     // On récupère et vérifie l'email.
     // - Pour cela on utilise la fonction verifierEmail() (de la classe statique/du fichier VerifierUtils)
     // - Si la fonction renvoie null dans la variable $user => c'est qu'il y a eu un souci. On ne fera pas de traitement plus bas.
     // - Si la fonction ne renvoie pas null, alors on a dans la variable $user, le mail.
-    $user = VerifierUtils::verifierEmail($_POST['email']);
+    $user = null;
+    if (isset($_POST['email'])) {
+        $user = VerifierUtils::verifierEmail($_POST['email']);
+    }
     if ($user == null) {
-        $messagePourHtml = "L'adresse email transmise n'a pas le bon format. ";
+        $messagePourHtml = "L'adresse email transmise n'est pas au bon format. ";
         $isOkToContinue = false;
     }
 
@@ -111,12 +112,15 @@ if (isset($_POST) && count($_POST) >= 2 ) {
     // - Pour cela on utilise la fonction verifierMotDePasse() (de la classe statique/du fichier VerifierUtils)
     // - Si la fonction renvoie null dans la variable $passwd => c'est qu'il y a eu un souci. On ne fera pas de traitement plus bas.
     // - Si la fonction ne renvoie pas null, alors on a dans la variable $passwd, le mot de passe.
-    $passwd = VerifierUtils::verifierMotDePasse($_POST['passwd']);
+    $passwd = null;
+    if (isset($_POST['passwd'])) {
+        $passwd = VerifierUtils::verifierMotDePasse($_POST['passwd']);
+    }
     if ($passwd == null) {
         $messagePourHtml .= "Le mot de passe ne respecte pas les conditions. ";
         $isOkToContinue = false;
     }
-    
+
     // On récupère la valeur de la checkbox ici. 
     // La valeur est facultative, donc on l'initialise a false par défaut.
     $isRegisterMode = false;
@@ -125,61 +129,57 @@ if (isset($_POST) && count($_POST) >= 2 ) {
     if (isset($_POST['isRegister'])) {
         $isRegisterMode = VerifierUtils::verifierChampsBooleen($_POST['isRegister']);
     }
-    
+
 
     // Si la valeur de la variable $isOkToContinue est toujours true, alors le traitement poursuivra.
     // Sinon cette partie sera ignoré = aucun traitement.
     if ($isOkToContinue) {
-    
+
         if ($isRegisterMode) {
-            // Le formulaire a demandé à enregister une nouvelle personne.
-            
+            // Le formulaire a demandé à enregistrer une nouvelle personne.
+
             if (PersonneServices::isUserExists($dbb, $user)) {
                 // la personne existe, il faut avertir l'utilisateur
                 // qu'il ne peut pas s'enregistrer, car le compte existe déjà
                 $messagePourHtml = "Un compte existe déjà avec cette adresse email";
             } else {
                 // la personne n'existe pas, on va l'enregistrer
-                
+
                 $userId = PersonneServices::addNewPersonne($dbb, $user, $passwd);
                 $_SESSION['isConnected'] = true;
                 $_SESSION['user'] = $user;
                 $_SESSION['userId'] = $userId;
-                
+
                 // On redirige l'utilisateur
-                header("Location: ".URL_SITE."/pages/mainPage.php");
+                header("Location: " . URL_SITE . "/pages/mainPage.php");
 
                 // La fonction exit() arrête le traitement de ce fichier à ce niveau.
-                // Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
+                // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
                 exit();
-                
             }
-            
         } else { // Sinon (= L'utilisateur souhaite se connecter)
-            
-            if (PersonneServices::isUserExistsWithPassword($dbb, $user, $passwd) ) {
+
+            if (PersonneServices::isUserExistsWithPassword($dbb, $user, $passwd)) {
                 // la personne existe : on connecte l'utilisateur
-                
+
                 $_SESSION['userId'] = PersonneServices::getUserId($dbb, $user, $passwd);
 
                 $_SESSION['isConnected'] = true;
                 $_SESSION['user'] = $user;
-                
+
                 // On redirige l'utilisateur
-                header("Location: ".URL_SITE."/pages/mainPage.php");
+                header("Location: " . URL_SITE . "/pages/mainPage.php");
 
                 // La fonction exit() arrête le traitement de ce fichier à ce niveau.
-                // Comme on va rediriger l'utilisateur, pas le peine de continuer le traitement de ce fichier.
+                // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
                 exit();
-
             } else {
                 $messagePourHtml = "Aucun utilisateur n'existe avec ce nom d'utilisateur ou ce mot de passe";
                 // On n'indique pas si c'est le mot de passe qui est faux, ou le nom d'utilisateur : un utilisateur
                 // malveillant pourrait utiliser cette indication à des fins malhonnètes.
-                
+
             }
         }
-
     } // Fin : if($isOkToContinue) 
 }
 
@@ -193,11 +193,11 @@ $navbarHtml['connect']['active'] = true;
 include("header.php");
 ?>
 
-<?php 
-	if ($messagePourHtml != "") {
-	   echo "<div class=\"alert alert-warning\" >$messagePourHtml</div>";   
-	}   
-	?>
+<?php
+if ($messagePourHtml != "") {
+    echo "<div class=\"alert alert-warning\" >$messagePourHtml</div>";
+}
+?>
 
 <h1>Site démo</h1>
 
@@ -221,7 +221,7 @@ include("header.php");
                         <h2>Bienvenue sur ce site de démonstration</h2>
                         <p>Il s'agit d'un petit site web permettant d'illustrer certains concepts de la programmation PHP. Il n'a pas pour but d'être aussi complet que ceux que vous allez/devez produire.</p>
 
-                        <p>Si vous accédez à cette page sans qu'il n'y ait eu d'erreur, c'est que le site s'est auto-configuré. Lors de cette configuration, une base de donnée a été créée; elle se nomme <code>bddexemple</code>. Cette dernière est très simple, puisqu'elle ne contient que 2 tables : <code>personne</code> et <code>image</code>. N'hésitez pas à aller voir la BDD avec <a href="<?="http://".$_SERVER['HTTP_HOST']."/phpmyadmin/index.php?db=bddexemple&target=db_structure.php"?>" target="_blank">PhpMyAdmin</a>.</p>
+                        <p>Si vous accédez à cette page sans qu'il n'y ait eu d'erreur, c'est que le site s'est auto-configuré. Lors de cette configuration, une base de donnée a été créée; elle se nomme <code>bddexemple</code>. Cette dernière est très simple, puisqu'elle ne contient que 2 tables : <code>personne</code> et <code>image</code>. N'hésitez pas à aller voir la BDD avec <a href="<?= "http://" . $_SERVER['HTTP_HOST'] . "/phpmyadmin/index.php?db=bddexemple&target=db_structure.php" ?>" target="_blank">PhpMyAdmin</a>.</p>
 
                     </div>
                 </div>
@@ -258,10 +258,10 @@ include("header.php");
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#indexExplications">
                     <div class="card-body">
-                        <p>Vous pouvez le voir sur la droite de cette page, il y a un formulaire permettant de se connecter à un compte ainsi que de s'enregister sur le site (selon que vous cochiez ou non la case 'S'enregistrer')</p>
-                        <p>Le formulaire envoie les données à la page courante (fichier <code>index.php</code>). Selon le traitement demander (s'enregister ou par défaut, se connecter), il va être nécessaire d'aller vérifier en BDD que l'utilisateur existe, puis vérifier son mot de passe pour une connexion, ou ajouter le nouvel utilisateur pour un enregistrement.</p>
+                        <p>Vous pouvez le voir sur la droite de cette page, il y a un formulaire permettant de se connecter à un compte ainsi que de s'enregistrer sur le site (selon que vous cochiez ou non la case 'S'enregistrer')</p>
+                        <p>Le formulaire envoie les données à la page courante (fichier <code>index.php</code>). Selon le traitement demander (s'enregistrer ou par défaut, se connecter), il va être nécessaire d'aller vérifier en BDD que l'utilisateur existe, puis vérifier son mot de passe pour une connexion, ou ajouter le nouvel utilisateur pour un enregistrement.</p>
                         <p>Ensuite, si l'utilisateur existe et qu'il a le bon mot de passe ou s'il s'agit d'un nouvel utilisateur, on va initialiser une entrée dans le tableau de la variable <code>$_SESSION</code> indiquant que l'utilisateur est connecté (<code>$_SESSION['isConnected'] = true</code>), et une autre entrée indiquant le nom de l'utilisateur connecté (<code>$_SESSION['user'] = true</code>).</p>
-                        <p>Enfin, avec la fonction PHP d'écriture d'en-tête HTTP <code>header()</code>, on redirige l'utilisateur vers la page de son espace utilisateur en écrivant ceci : <code>header("Location: ".URL_SITE."/mainPage.php");</code>. Pour information la page de l'espace membre se trouve à cette adresse <a href="<?=URL_SITE.'/mainPage.php'?>" target="_blank"><?=URL_SITE.'/mainPage.php'?></a>, mais elle est normalement inacessible pour l'instant car vous n'êtes pas connecté.</p>
+                        <p>Enfin, avec la fonction PHP d'écriture d'en-tête HTTP <code>header()</code>, on redirige l'utilisateur vers la page de son espace utilisateur en écrivant ceci : <code>header("Location: ".URL_SITE."/mainPage.php");</code>. Pour information la page de l'espace membre se trouve à cette adresse <a href="<?= URL_SITE . '/mainPage.php' ?>" target="_blank"><?= URL_SITE . '/mainPage.php' ?></a>, mais elle est normalement inacessible pour l'instant car vous n'êtes pas connecté.</p>
                     </div>
                 </div>
             </div>
@@ -291,11 +291,11 @@ include("header.php");
 
 
     <!-- Formulaire de connexion -->
-    <div class="col-sm-4"> 
+    <div class="col-sm-4">
         <form class="form-signin col-sm-12" method="post" id="formConnect">
 
             <h1 class="h3 mb-3 font-weight-normal">
-                Merci de vous <?=empty($checkedInitStateHtml) ? "connecter" : "enregistrer"?>
+                Merci de vous <?= empty($checkedInitStateHtml) ? "connecter" : "enregistrer" ?>
                 <?php
                 // Ce code : empty($checkedInitStateHtml) ? "connecter" : "enregistrer"
                 // est une forme raccourcie, dédiée à de l'affichage, à celui ci :
@@ -316,11 +316,11 @@ include("header.php");
             <div class="form-group">
                 <label for="inputPassword" class="sr-only">Mot de passe</label>
                 <input name="passwd" type="password" id="inputPassword" class="form-control" placeholder="Mot de passe" pattern="^[a-zA-Z0-9_\-\.]{5,15}$" required>
-                <small class="form-text text-muted">Le mot de passe ne doit pas avoir d'espace et doit faire entre 5 et 15 caractères de long. (inspectez l'attribut <code>pattern</code> du input avec <kdb>F12</kdb> pour observer l'expression régulière).</small>
+                <small class="form-text text-muted">Le mot de passe ne doit pas avoir d'espace et doit faire entre 5 et 15 caractères de long. (inspecter l'attribut <code>pattern</code> du input avec <kdb>F12</kdb> pour observer l'expression régulière).</small>
             </div>
 
             <div class="form-check">
-                <input name="isRegister" type="checkbox" value="1" class="form-check-input" id="inputReg" <?=$checkedInitStateHtml?>>
+                <input name="isRegister" type="checkbox" value="1" class="form-check-input" id="inputReg" <?= $checkedInitStateHtml ?>>
                 <label class="form-check-label">S'enregistrer</label>
             </div>
 
@@ -345,7 +345,7 @@ include("header.php");
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Vous avez cliquez pour envoyer le formulaire. Voici ce qu'il va se passer une fois que vous aurez cliqué sur continuer :</p>
+                    <p>Vous avez cliqué pour envoyer le formulaire. Voici ce qu'il va se passer une fois que vous aurez cliqué sur continuer :</p>
                     <ul>
                         <li>Les données vont être vérifiées avant envoie. Puis, si OK, le formulaire les enverra (<code>method="post"</code>) sur cette même page.</li>
                         <li>Les données postées sont les suivantes :
@@ -354,8 +354,8 @@ include("header.php");
                                 <div class="col" id="divMail">Aucune donnée</div>
                             </div>
                         </li>
-                        <li>C'est donc ce fichier <code>index.php</code> qui va vérifier les données, vérifier que l'utilisateur existe et si besoin créeer l'enregistrement.</li>
-                        <li>Puis, la session va être initalisée (<code>$_SESSION['isConnected'] = true</code>).</li>
+                        <li>C'est donc ce fichier <code>index.php</code> qui va vérifier les données, vérifier que l'utilisateur existe et si besoin créer l'enregistrement.</li>
+                        <li>Puis, la session va être initialisée (<code>$_SESSION['isConnected'] = true</code>).</li>
                         <li>Et si tout est OK, l'utilisateur est redirigé vers la page "Accueil" <code>mainPage.php</code></li>
 
                     </ul>
@@ -379,10 +379,10 @@ include("header.php");
 
     }
 
-    $('form input:not([type="submit"])').keydown(function (e) {
+    $('form input:not([type="submit"])').keydown(function(e) {
         if (e.keyCode == 13) {
             var inputs = $(this).parents("form").eq(0).find(":input");
-            if (inputs[inputs.index(this) + 1] != null) {                    
+            if (inputs[inputs.index(this) + 1] != null) {
                 inputs[inputs.index(this) + 1].focus();
             }
             e.preventDefault();
@@ -408,7 +408,7 @@ include("header.php");
         } else {
             eltButton.innerText = "Se connecter";
         }
-        
+
         divMail.innerHTML = txt;
     }
 
