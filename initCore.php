@@ -85,12 +85,29 @@ $navbarHtml = [
 
 ];
 
+/**
+ * Redirige l'utilisateur vers la page listImages.php avec un message d'erreur.
+ * 
+ * @param string $error le message d'erreur à afficher.
+ */
 function redirectWithError($error)
 {
     header("Location: " . URL_SITE . "/pages/listImages.php?error=" . $error);
     exit();
 }
 
+/**
+ *
+ */
+/**
+ * Capture la sortie de la fonction `var_dump` et la retourne sous forme de chaîne.
+ *
+ * Cette fonction est utile lorsque vous souhaitez inspecter le contenu d'une variable
+ * sans l'afficher directement dans le navigateur ou la console.
+ *
+ * @param mixed $mixed La variable à analyser. Peut être de n'importe quel type.
+ * @return string La sortie de `var_dump` sous forme de chaîne.
+ */
 function var_dump_ret($mixed = null)
 {
     ob_start();
@@ -103,8 +120,9 @@ function var_dump_ret($mixed = null)
 /**
  * Convertie des octets en taille de fichier humainement compréhensible .
  *
- * @param string $bytes
+ * @param string $bytes taille en octets
  * @return string human readable file size
+ * 
  * @author Mogilev Arseny
  */
 function fileSizeConvert($bytes)
