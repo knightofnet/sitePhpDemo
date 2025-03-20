@@ -10,7 +10,7 @@ Vous êtes ici sur le dépôt du site Démo : c'est dans cet espace que sont sto
 - Télécharger les fichiers [en cliquant ici](https://github.com/knightofnet/sitePhpDemo/archive/refs/heads/master.zip).
 - Créer un nouveau dossier la racine du serveur web. Exemple : sitePhpDemo.
 - Placez les fichiers du site dans ce dossier.
-- Configurez l'accès à la BDD, en modifiant le fichier ./php/BddUtils.
+- Configurez l'accès à la BDD, en modifiant le fichier ``initCore.php``.
 - Naviguez sur ce site à l'aide de votre navigateur internet. Selon la configuration, le site est peut-être accessible à l'aide de cette URL : http://localhost/sitephpdemo.
 
 ## Remarques
@@ -20,7 +20,7 @@ Vous êtes ici sur le dépôt du site Démo : c'est dans cet espace que sont sto
 - En plus de la navigation sur le site, il est indispensable d'ouvrir les différents fichiers PHP. Afin de rendre cela plus confortable, vous pouvez utiliser un EDI - Environnement de Developpement Integré - (IDE en anglais). Comme EDI gratuit, vous pouvez utiliser _Visual Studio Code_, avec les extensions suivantes (à installer une fois _Visual Studio Code_ installé) : 'PHP Intelephense*' et 'Format HTML in PHP'.
 
 
-\* : Une fois PHP Intelephense installé, cliquez sur la petite roue dentée, puis sur "Extension settings" pour accéder aux paramètres de l'extension. Cherchez le paramètre "Environnement: PHP Version", et donnez-lui la valeur "5.6.40".
+\* : Une fois PHP Intelephense installé, cliquez sur la petite roue dentée, puis sur "Extension settings" pour accéder aux paramètres de l'extension.
 
 
    
