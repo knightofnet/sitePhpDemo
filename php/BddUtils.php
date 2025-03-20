@@ -16,19 +16,35 @@ class BddUtils
     public static $nomBdd = "bddexemple";
 
 
-    public static function connectBDD() : \PDO {
-        
-        $dsn = "mysql:host=" . self::$adresseServeurMysql . ";dbname=" . self::$nomBdd.";charset=utf8";
+    public static function connectBDD(): \PDO
+    {
 
-        $db = new PDO($dsn, 
-                         self::$utilisateurMysql,
-                         self::$mdpMySql
-                         );
-        
+        $dsn = "mysql:host=" . self::$adresseServeurMysql . ";dbname=" . self::$nomBdd . ";charset=utf8";
+
+        $db = new PDO(
+            $dsn,
+            self::$utilisateurMysql,
+            self::$mdpMySql
+        );
+
         //echo 'Succés... ' . $db->host_info . "\n";
-        
+
         return $db;
     }
-    
-}
 
+    public static function connectSgbdNoBdd(): \PDO
+    {
+
+        $dsn = "mysql:host=" . self::$adresseServeurMysql . ";charset=utf8";
+
+        $db = new PDO(
+            $dsn,
+            self::$utilisateurMysql,
+            self::$mdpMySql
+        );
+
+        //echo 'Succés... ' . $db->host_info . "\n";
+
+        return $db;
+    }
+}
