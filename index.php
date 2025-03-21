@@ -84,7 +84,7 @@ function tryConnectUser($dbb, $user, $passwd)
     if (password_verify(PWD_SALT . $passwd, $userTablo['passwd'])) {
         // Si le mot de passe est correct, on initialise la session.
         $_SESSION['isConnected'] = true;
-        $_SESSION['user'] = $userTablo['mail'];
+        $_SESSION['user'] = $userTablo['nompersonne'];
         $_SESSION['userId'] = $userTablo['idpersonne'];
 
         // On redirige l'utilisateur
