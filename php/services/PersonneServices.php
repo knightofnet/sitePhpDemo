@@ -85,7 +85,7 @@ class PersonneServices
         $_SESSION['requeteSqlMemoire'][] = "SELECT nompersonne, passwd FROM personne WHERE nompersonne='$nom'";
 
         // On écrit la requête SQL avec des paramètres '?' pour les valeurs à insérer
-        $requeteSql = "SELECT nompersonne, passwd FROM personne WHERE nompersonne= ?";
+        $requeteSql = "SELECT idpersonne, nompersonne, passwd FROM personne WHERE nompersonne= ?";
         // On prépare la requête SQL
         $stmt = $dbb->prepare($requeteSql);
         // On associe les paramètres avec les valeurs
