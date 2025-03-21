@@ -23,11 +23,90 @@
  */
 require_once("initCore.php");
 
+
+/*
+ On déclare des fonctions qui seront utilisées dans ce fichier.
+ */
+
+/**
+ * Enregistre un nouvel utilisateur dans la base de données.
+ * 
+ * @param PDO $dbb La connexion à la base de données.
+ * @param string $user Le nom de l'utilisateur.
+ * @param string $passwd Le mot de passe de l'utilisateur.
+ *
+ */
+function registerUser($dbb, $user, $passwd)
+{
+    // On ne va pas écrire le mot de passe en clair dans la BDD. On va lui 
+    // ajouter un sel et le hasher avec un algorithme de hashage. 
+    // Cela permet de sécuriser le mot de passe
+    //
+    // La fonction password_hash() de PHP permet d'effectuer le hashage.
+    $passwd_hashed = password_hash(PWD_SALT . $passwd, PASSWORD_DEFAULT);
+
+    $userId = PersonneServices::addNewPersonne($dbb, $user, $passwd_hashed);
+    $_SESSION['isConnected'] = true;
+    $_SESSION['user'] = $user;
+    $_SESSION['userId'] = $userId;
+
+    // On redirige l'utilisateur
+    header("Location: " . URL_SITE . "/pages/mainPage.php");
+
+    // La fonction exit() arrête le traitement de ce fichier à ce niveau.
+    // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
+    exit();
+}
+
+/**
+ * Tente de connecter un utilisateur.
+ * 
+ * @param PDO $dbb La connexion à la base de données.
+ * @param string $user Le nom de l'utilisateur.
+ * @param string $passwd Le mot de passe de l'utilisateur.
+ * 
+ * @return string Un message d'erreur si la connexion a échoué, sinon rien.
+ */
+function tryConnectUser($dbb, $user, $passwd)
+{
+    // On récupère les informations de l'utilisateur en BDD.
+    $userTablo = PersonneServices::getUserByName($dbb, $user);
+
+    // Si l'utilisateur n'existe pas, on renvoie un message d'erreur.
+    if ($userTablo == null) {
+        return "L'utilisateur n'existe pas.";
+    }
+
+    // On vérifie que le mot de passe est correct.
+    // Pour cela, on utilise la fonction password_verify() de PHP.
+    // Cette fonction permet de vérifier si un mot de passe correspond à un hash.
+    // Elle prend en paramètre le mot de passe en clair et le hash du mot de passe.
+    if (password_verify(PWD_SALT . $passwd, $userTablo['passwd'])) {
+        // Si le mot de passe est correct, on initialise la session.
+        $_SESSION['isConnected'] = true;
+        $_SESSION['user'] = $userTablo['mail'];
+        $_SESSION['userId'] = $userTablo['idpersonne'];
+
+        // On redirige l'utilisateur
+        header("Location: " . URL_SITE . "/pages/mainPage.php");
+
+        // La fonction exit() arrête le traitement de ce fichier à ce niveau.
+        // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
+        exit();
+    } else {
+        // Si le mot de passe n'est pas correct, on renvoie un message d'erreur.
+        return "Le mot de passe est incorrect.";
+    }
+}
+
+
+
 // Ici la variable $messagePourHtml est initialisée. Cette variable - si son contenu est différent de vide - permettra de faire passer un message à l'utilisateur.
 $messagePourHtml = "";
 // La fonction connectBDD de la classe/fichier BddUtils permet de se connecter à la base de données.
 // La connexion (si ok) est sauvegardée dans la variable $bdd.
 $dbb = BddUtils::connectBDD();
+
 
 
 /*
@@ -143,45 +222,17 @@ if (!empty($_POST) && count($_POST) >= 2) {
                 // qu'il ne peut pas s'enregistrer, car le compte existe déjà
                 $messagePourHtml = "Un compte existe déjà avec cette adresse email";
             } else {
+
                 // la personne n'existe pas, on va l'enregistrer
-
-                $userId = PersonneServices::addNewPersonne($dbb, $user, $passwd);
-                $_SESSION['isConnected'] = true;
-                $_SESSION['user'] = $user;
-                $_SESSION['userId'] = $userId;
-
-                // On redirige l'utilisateur
-                header("Location: " . URL_SITE . "/pages/mainPage.php");
-
-                // La fonction exit() arrête le traitement de ce fichier à ce niveau.
-                // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
-                exit();
+                registerUser($dbb, $user, $passwd);
             }
         } else { // Sinon (= L'utilisateur souhaite se connecter)
 
-            if (PersonneServices::isUserExistsWithPassword($dbb, $user, $passwd)) {
-                // la personne existe : on connecte l'utilisateur
-
-                $_SESSION['userId'] = PersonneServices::getUserId($dbb, $user, $passwd);
-
-                $_SESSION['isConnected'] = true;
-                $_SESSION['user'] = $user;
-
-                // On redirige l'utilisateur
-                header("Location: " . URL_SITE . "/pages/mainPage.php");
-
-                // La fonction exit() arrête le traitement de ce fichier à ce niveau.
-                // Comme on va rediriger l'utilisateur, pas la peine de continuer le traitement de ce fichier.
-                exit();
-            } else {
-                $messagePourHtml = "Aucun utilisateur n'existe avec ce nom d'utilisateur ou ce mot de passe";
-                // On n'indique pas si c'est le mot de passe qui est faux, ou le nom d'utilisateur : un utilisateur
-                // malveillant pourrait utiliser cette indication à des fins malhonnètes.
-
-            }
+            $messagePourHtml = tryConnectUser($dbb, $user, $passwd);
         }
     } // Fin : if($isOkToContinue) 
 }
+
 
 $checkedInitStateHtml = "";
 if (!PersonneServices::isThereOneUser($dbb)) {
@@ -194,8 +245,8 @@ include("header.php");
 ?>
 
 <?php
-if ($messagePourHtml != "") {
-    echo "<div class=\"alert alert-warning\" >".htmlspecialchars($messagePourHtml)."</div>";
+if (!empty($messagePourHtml)) {
+    echo "<div class=\"alert alert-warning\" >" . htmlspecialchars($messagePourHtml) . "</div>";
 }
 ?>
 
@@ -270,11 +321,34 @@ if ($messagePourHtml != "") {
                 <div class="card-header" id="headingFour">
                     <h2 class="mb-0">
                         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                            Derniers conseils
+                            Mot de passe et sécurité
                         </button>
                     </h2>
                 </div>
                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#indexExplications">
+                    <div class="card-body">
+
+                        <p>En observant le code PHP du fichier <code>index.php</code>, vous avez pu voir que le mot de passe n'est pas stocké en clair dans la base de données. En effet, il est hashé. Cela signifie que le mot de passe est transformé en une suite de caractères aléatoires, et qu'il est impossible de retrouver le mot de passe d'origine à partir de cette suite de caractères. C'est une sécurité supplémentaire pour les utilisateurs du site.
+                        </p>
+
+                        <p>
+                            On accentue cette sécurité en ajoutant un sel <code>PWD_SALT</code> au mot de passe avant de le hasher. Un sel est une suite de caractères aléatoires qui est ajoutée au mot de passe avant de le hasher. Cela permet de rendre le mot de passe plus complexe, et donc plus difficile à retrouver. Le sel est stocké dans le fichier <code>initCore.php</code>. Il est important de ne pas le changer une fois que le site est en production, car cela rendrait impossible la connexion des utilisateurs existants. Plus d'informations sur les sels <a href="https://www.mailinblack.com/ressources/blog/le-salage-de-mots-de-passe-une-couche-de-securite-indispensable/" target="_blank">ici</a>.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header" id="headingSix">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            Derniers conseils
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#indexExplications">
                     <div class="card-body">
                         <p>Ouvrez les fichiers PHP et lisez le code. J'ai essayé de mettre pas mal de commentaires afin de vous expliquer le plus de choses possibles. Vous pouvez utilisez l'IDE gratuit et multi plateforme <a href="https://code.visualstudio.com/" title="Visual Studio Code">Visual Studio Code</a> pour vous y aider.</p>
 

@@ -33,6 +33,8 @@ define("URL_SITE", "http://" . $_SERVER['HTTP_HOST'] . '/' . $s[1]);
 
 define("BDD_NOM_BASE_DE_DONNEES", "bddexemple");
 
+define("PWD_SALT", "a1z2e3r4t5y6u7i8o9p0_");
+
 // On charge les fichiers nécessaires pour le site.
 // - Ils sont chargés une seule fois ("require_once").
 require_once(DIR_SRV . 'php/AutoCreateNewBdd.php');
