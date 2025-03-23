@@ -19,9 +19,7 @@ try {
         ImageServices::deleteImageAvecId($dbb, $image['idimage']);
     }
 
-    // On regarde si la remise à zéro de la base de données a aussi été demandée.
-
-    // Si oui, on efface la BDD.
+    // On efface la BDD.
     AutoCreateNewBdd::razSite($dbb);
 
     // On détruit aussi la session.
