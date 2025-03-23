@@ -22,6 +22,13 @@
                         }
                         ?>
                     </code>
+                    <code>
+                        <?php
+                        if (isset($db)) {
+                            echo $e->getTraceAsString();;
+                        }
+                        ?>
+                    </code>
                 </div>
 
                 <p>Il y a eu une erreur lors de la connexion à la base de données.</p>
@@ -66,10 +73,12 @@
                                                 if (BDD_MDP == "") {
                                                     echo "Aucun mot de passe";
                                                 } else {
-                                                    echo BDD_MDP;
+                                                    echo "****";
                                                 }
                                                 ?></code>
                     </li>
+
+
                 </ul>
             </div>
         </div>
