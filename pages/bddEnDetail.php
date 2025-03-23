@@ -30,14 +30,14 @@ include("../header.php");
         <h1>La Base de données en détail</h1>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 mb-3">
         <h2>Conception de la base de données</h2>
-        <p>La base de donnée de ce site de démonstration est nommée : <code>bddexemple</code>.</p>
+        <p>La base de données de ce site de démonstration est nommée : <code>bddexemple</code>.</p>
         <p>
             Son MCD est composé de 2 entités : personne et image. Une personne est identifiée par un identifiant (<code>idpersonne</code>), et d'autres attributs comme le nom/email (<code>nom</code>) et un mot de passe (<code>passwd</code>). Une image est identifiée par un identifiant (<code>idimage</code>), et d'autres attributs comme le nom de l'image (<code>nomImage</code>), le chemin de l'image sur le serveur (<code>path</code>).
         </p>
         <p>
-            Une personne peut s'enregistrer sur le site. Une fois enregistrée, elle peut ajouter des images (0,N). Les fichiers des images sont stockés sur le serveur de fichier, et les informations des images sont stockées en base de données. Une image est associée à une et une seule personne (1,1).
+            Une personne peut s'enregistrer sur le site. Une fois enregistrée, elle peut ajouter des images (0,N). Les fichiers des images sont stockés sur le serveur de fichiers, et les informations des images sont stockées en base de données. Une image est associée à une et une seule personne (1,1).
         </p>
         <p>On a le MCD suivant :</p>
         <p>
@@ -47,12 +47,12 @@ include("../header.php");
         <p>
             Code pour reproduire ce MCD sur <a href="https://www.mocodo.net/?mcd=eNoLSC0qzs_LS1WwUshMKYBydBTy8nN1FAoSi4vLU7gcs_JLS1KL4jNzE9OBUgZ-CgFwdYaGCp4gYS4wCTYEqgxogieEVZBYkgEATj0jRA==" target="_blank">MOCODO</a> :
         </p>
-        <pre><code>Personne : idpersonne, nom, passwd
+        <pre class="codeSql"><code>Personne : idpersonne, nom, passwd
 Ajouter_image, 0N Personne, 11 Image
 Image : idimage, nomImage, path</code></pre>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 mb-3">
         <h2>Structure de la base de données</h2>
 
         <p>
@@ -74,17 +74,16 @@ Image : idimage, nomImage, path</code></pre>
         </p>
 
         <p>
-            Code pour reproduire ce MLD sur <a href="https://www.mocodo.net/?mcd=eNpTVc3NT85Pyeey4gpILSrOz8tLtVLITCmAsnUU8vJzdRQKEouLy1OAajxzE9PBCjJBDLCsJ4RVkFiSoaOgjNCqYKcQgGAixIGmAAAjtCen
-        <pre><code>%%mocodo" target="_blank">MOCODO</a> :
+            Code pour reproduire ce MLD sur <a href="https://www.mocodo.net/?mcd=eNpTVc3NT85Pyeey4gpILSrOz8tLtVLITCmAsnUU8vJzdRQKEouLy1OAajxzE9PBCjJBDLCsJ4RVkFiSoaOgjNCqYKcQgGAixIGmAAAjtCen" target="_blank">MOCODO</a> :
         </p>
-        <pre>:
+        <pre class="codeSql">:
 Personne: idpersonne, nom, passwd
 :
 Image: idimage, nomImage, path, #idpersonne > Personne > idpersonne
 :</pre>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 mb-3">
         <h2>MPD de la base de données</h2>
 
         <p>
@@ -94,11 +93,11 @@ Image: idimage, nomImage, path, #idpersonne > Personne > idpersonne
             On obtient le MPD suivant :
         </p>
         <p>
-            <img src="../imgsite/MPD.png" alt="MLD">
+            <img src="../imgsite/MPD.png" alt="MPD">
         </p>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 mb-3">
         <h2>Du MPD à la base de données</h2>
 
         <p>
@@ -188,6 +187,36 @@ Image: idimage, nomImage, path, #idpersonne > Personne > idpersonne
         </div>
 
     </div>
+
+    <div class="col-sm-12 mb-3">
+        <h2>Spécificité de ce site : auto-création de la BDD</h2>
+
+        <p>
+            Afin de faciliter la mise en place de ce site de démonstration sur un serveur web local, un script PHP a été créé pour auto-créer la base de données. Le tout se passe dans le fichier
+            <a href="https://github.com/knightofnet/sitePhpDemo/blob/master/php/AutoCreateNewBdd.php" target="_blank"><code>AutoCreateNewBdd.php</code></a>.
+        </p>
+
+        <p>
+            Le code fonctionne ainsi à chaque chargement de page :
+        </p>
+
+        <ul>
+            <li>On tente de se connecter à la base de données <code>bddexemple</code>.</li>
+            <li>Si la connexion échoue, on crée la base de données <code>bddexemple</code> et les tables <code>personne</code> et <code>image</code> (l'échec peut aussi être dû à un problème avec les informations de connexion. On examine le message d'erreur pour essayer de déterminer si c'est le cas).</li>
+            <li>
+                Sinon, si la connexion réussit, on ne fait rien.
+            </li>
+            <li>
+                Le site se charge normalement.
+            </li>
+        </ul>
+
+        <p>
+            Cette façon de faire est totalement hors-sujet avec un site en production, mais est très pratique pour un site de démonstration. <span class="fw-bold">Vous ne devez pas utiliser ce script</span>.
+        </p>
+
+    </div>
+
 
 </div>
 <?php
