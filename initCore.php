@@ -12,11 +12,11 @@ ini_set("display_errors", 1);
 // L'adresse du serveur de base de données.
 define("BDD_ADRESSE_SERVEUR", "127.0.0.1");
 // Le port du serveur de base de données.
-define("BDD_PORT", "3306");
+define("BDD_PORT", '3306');
 // L'utilisateur pour se connecter à la BDD.
-define("BDD_UTILISATEUR", "root");
+define("BDD_UTILISATEUR", 'root');
 // Le mot de passe de l'utilisateur pour se connecter à la BDD.
-define("BDD_MDP", "");
+define("BDD_MDP", '');
 
 // ===============================================
 
@@ -33,7 +33,7 @@ define("URL_SITE", "http://" . $_SERVER['HTTP_HOST'] . '/' . $s[1]);
 
 define("BDD_NOM_BASE_DE_DONNEES", "bddexemple");
 
-define("PWD_SALT", "a1z2e3r4t5y6u7i8o9p0_");
+define("PWD_SALT", 'a1z2e3r4t5y6u7i8o9p0_');
 
 // On charge les fichiers nécessaires pour le site.
 // - Ils sont chargés une seule fois ("require_once").
@@ -55,9 +55,15 @@ AutoCreateNewBdd::create();
 $navbarHtml = [
     'accueil' => [
         'nom' => 'Accueil',
-        'lien' => URL_SITE . '/pages/mainPage.php',
+        'lien' => isset($_SESSION['isConnected']) ? URL_SITE . '/pages/mainPage.php' : URL_SITE . '/index.php',
         'active' => false,
-        'title' => "Page d'accueil de l'utilisateur connecté"
+        'title' => isset($_SESSION['isConnected']) ? "Page d'accueil de l'utilisateur connecté" : "Page d'accueil"
+    ],
+    'bddEnDetail' => [
+        'nom' => 'Base de données',
+        'lien' => URL_SITE . '/pages/bddEnDetail.php',
+        'active' => false,
+        'title' => "Plus d'informations sur la base de données"
     ],
     'lstImage' => [
         'nom' => 'Liste images',
