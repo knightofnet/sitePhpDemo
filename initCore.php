@@ -57,38 +57,52 @@ $navbarHtml = [
         'nom' => 'Accueil',
         'lien' => isset($_SESSION['isConnected']) ? URL_SITE . '/pages/mainPage.php' : URL_SITE . '/index.php',
         'active' => false,
-        'title' => isset($_SESSION['isConnected']) ? "Page d'accueil de l'utilisateur connecté" : "Page d'accueil"
+        'title' => isset($_SESSION['isConnected']) ? "Page d'accueil de l'utilisateur connecté" : "Page d'accueil",
+        'auto' => true
+
     ],
     'bddEnDetail' => [
         'nom' => 'Base de données',
         'lien' => URL_SITE . '/pages/bddEnDetail.php',
         'active' => false,
-        'title' => "Plus d'informations sur la base de données"
+        'title' => "Plus d'informations sur la base de données",
+        'auto' => true
     ],
     'lstImage' => [
         'nom' => 'Liste images',
         'lien' => URL_SITE . '/pages/listImages.php',
         'active' => false,
-        'title' => "Liste des images. Nécessite d'être connecté"
+        'title' => "Liste des images. Nécessite d'être connecté",
+        'auto' => true
+    ],
+    'autrePage' => [
+        'nom' => "Autres pages",
+        'active' => false,
+        'title' => "Autres pages",
+        'auto' => true,
+        'sousElts' => [
+            'razSite' => [
+                'nom' => "R-à-Z",
+                'lien' => URL_SITE . '/pages/razSite.php',
+                'active' => false,
+                'title' => "Page pour remettre à zéro le site",
+                'auto' => true
+            ],
+            'consulterImage' => [
+                'nom' => "Consulter une image",
+                'lien' => URL_SITE . '/pages/consulterImage.php',
+                'active' => false,
+                'title' => "Consulter une image",
+                'auto' => true
+            ]
+        ]
     ],
     'connect' => [
         'nom' => isset($_SESSION['isConnected']) ? "Déconnexion" : "Connexion",
         'lien' => URL_SITE . '/index.php' . (isset($_SESSION['isConnected']) ? '?action=logout' : ''),
         'active' => false,
         'title' => isset($_SESSION['isConnected']) ? "Cliquez pour vous déconnecter et retourner sur la page d'introduction" : "La page d'introduction, là où vous êtes actuellement"
-    ],
-    'razSite' => [
-        'nom' => "R-à-Z",
-        'lien' => URL_SITE . '/pages/razSite.php',
-        'active' => false,
-        'title' => "Page pour remettre à zéro le site"
-    ],
-    'consulterImage' => [
-        'nom' => "Consulter une image",
-        'lien' => URL_SITE . '/pages/consulterImage.php',
-        'active' => false,
-        'title' => "Consulter une image"
-    ],
+    ]
 
 
 ];
@@ -169,4 +183,30 @@ function fileSizeConvert($bytes)
         }
     }
     return $result;
+}
+
+function activeNavbar(&$navbarHtml, $nomPage)
+{
+
+    $nomPageA = strpos($nomPage, '.') ? substr($nomPage, 0, strpos($nomPage, '.')) : $nomPage;
+    $resteDuNom = strpos($nomPage, '.') ? substr($nomPage, strpos($nomPage, '.') + 1) : '';
+
+
+    foreach ($navbarHtml as $key => $value) {
+        if ($key == $nomPageA) {
+
+            if (!isset($navbarHtml[$key]['sousElts'])) {
+                $navbarHtml[$key]['active'] = true;
+            } else {
+                activeNavbar($navbarHtml[$key]['sousElts'], $resteDuNom);
+            }
+        } else {
+
+            if (isset($navbarHtml[$key]['sousElts'])) {
+                activeNavbar($navbarHtml[$key]['sousElts'], $nomPage);
+            } else {
+                $navbarHtml[$key]['active'] = false;
+            }
+        }
+    }
 }

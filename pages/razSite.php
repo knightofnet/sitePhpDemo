@@ -65,7 +65,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "raz" || $_GET['action'] == "d
 
 
 
-$navbarHtml['razSite']['active'] = true;
+activeNavbar($navbarHtml, 'autrePage.razSite');
 
 include("../header.php");
 ?>

@@ -1,17 +1,60 @@
 <?php
 
+function renderNavItem($navElt)
+{
+    if (!isset($navElt['auto']) || !$navElt['auto']) {
+        return;
+    }
+
+    if (isset($navElt['sousElts'])) {
+        renderDropdown($navElt);
+    } else {
 ?>
+        <li class="nav-item<?= $navElt['active'] ? " active" : "" ?>">
+            <a class="nav-link" title="<?= $navElt['title'] ?>" href="<?= $navElt['lien'] ?>"><?= $navElt['nom'] ?></a>
+        </li>
+    <?php
+    }
+}
+
+function renderDropdown($navElt)
+{
+    if (!isset($navElt['auto']) || !$navElt['auto']) {
+        return;
+    }
+    ?>
+    <li class="nav-item dropdown<?= $navElt['active'] ? " active" : "" ?>">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?= $navElt['nom'] ?>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <?php
+            foreach ($navElt['sousElts'] as $sousElt) {
+            ?>
+                <a class="dropdown-item<?= $sousElt['active'] ? " active" : "" ?>" href="<?= $sousElt['lien'] ?>" title="<?= $sousElt['title'] ?>"><?= $sousElt['nom'] ?></a>
+            <?php
+            }
+            ?>
+        </div>
+    </li>
+<?php
+}
+
+
+
+?>
+
 <!doctype html>
 <html>
 
 <head>
     <meta charset="utf-8">
 
-    <link href="<?=URL_SITE?>/css/bootstrap.css" rel="stylesheet" />
-    <link href="<?=URL_SITE?>/css/perso.css" rel="stylesheet" />
-        
+    <link href="<?= URL_SITE ?>/css/bootstrap.css" rel="stylesheet" />
+    <link href="<?= URL_SITE ?>/css/perso.css" rel="stylesheet" />
+
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>Page public</title>
 
@@ -29,44 +72,19 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-
                 <?php
-                    $l = $navbarHtml['accueil'];
+                foreach ($navbarHtml as $navElt) {
+                    renderNavItem($navElt);
+                }
                 ?>
-                <li class="nav-item<?=$l['active'] ? " active" : ""?>">
-                    <a class="nav-link" title="<?=$l['title']?>" href="<?=$l['lien']?>"><?=$l['nom']?></a>
-                </li>
-
-                <?php
-                    $l = $navbarHtml['lstImage'];
-                ?>
-                <li class="nav-item<?=$l['active'] ? " active" : ""?>">
-                    <a class="nav-link" title="<?=$l['title']?>" href="<?=$l['lien']?>"><?=$l['nom']?></a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Autres liens</a>
-                    <div class="dropdown-menu">
-
-                        <?php $l = $navbarHtml['consulterImage']; ?>
-                        <a class="dropdown-item" title="<?=$l['title']?>" href="<?=$l['lien']?>"><?=$l['nom']?></a>
-
-                        <div class="dropdown-divider"></div>
-
-                        <?php $l = $navbarHtml['razSite']; ?>
-                        <a class="dropdown-item" title="<?=$l['title']?>" href="<?=$l['lien']?>"><?=$l['nom']?></a>
-
-                    </div>
-                </li>
-
             </ul>
 
             <ul class="navbar-nav">
                 <?php
-                    $l = $navbarHtml['connect'];
+                $l = $navbarHtml['connect'];
                 ?>
-                <li class="nav-item<?=$l['active'] ? " active" : ""?>">
-                    <a class="nav-link" title="<?=$l['title']?>" href="<?=$l['lien']?>"><?=$l['nom']?></a>
+                <li class="nav-item<?= $l['active'] ? " active" : "" ?>">
+                    <a class="nav-link" title="<?= $l['title'] ?>" href="<?= $l['lien'] ?>"><?= $l['nom'] ?></a>
                 </li>
             </ul>
 

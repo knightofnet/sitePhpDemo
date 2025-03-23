@@ -239,7 +239,8 @@ if (!PersonneServices::isThereOneUser($dbb)) {
     $checkedInitStateHtml = " checked";
 }
 
-$navbarHtml['connect']['active'] = true;
+activeNavbar($navbarHtml, 'accueil');
+
 
 include("header.php");
 ?>

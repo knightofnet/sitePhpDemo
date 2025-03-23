@@ -85,7 +85,8 @@ if (isset($_GET['id'])) {
 }
 
 
-$navbarHtml['consulterImage']['active'] = true;
+activeNavbar($navbarHtml, 'autrePage.consulterImage');
+
 
 include("../header.php");
 ?>
