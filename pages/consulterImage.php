@@ -25,7 +25,11 @@ require_once("../initCore.php");
 // on renvoie une erreur 404 et on arrête le chargement de la page
 if (!isset($_SESSION['isConnected']) || $_SESSION['isConnected'] == false) {
     header("HTTP/1.0 404 Not Found");
-    echo "Page inexistante";
+    echo "
+	Page inexistante... 
+	Ou du moins, vous n'avez pas le droit d'y accéder (connectez-vous). 
+	Regardez le code PHP de cette page pour plus d'informations.
+	";
     exit();
 }
 
