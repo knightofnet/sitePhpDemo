@@ -94,6 +94,13 @@ $navbarHtml = [
                 'active' => false,
                 'title' => "Consulter une image",
                 'auto' => true
+            ],
+            'codeGithub' => [
+                'nom' => 'Code source',
+                'lien' => 'https://github.com/knightofnet/sitePhpDemo',
+                'active' => false,
+                'title' => "Lien vers le code source sur GitHub",
+                'auto' => true
             ]
         ]
     ],
